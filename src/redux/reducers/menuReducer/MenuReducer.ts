@@ -4,8 +4,8 @@ import {MENU_ACTION_TYPE} from "../../actions/ActionTypes";
 export const MenuReducer = (state = MenuState, action: any) => {
     switch (action.type) {
         case MENU_ACTION_TYPE:
-            return {...state};
+            return state; // {...state} 返回对象了
         default:
-            return {...state};
+            return state;
     }
 };

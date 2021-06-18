@@ -8,19 +8,46 @@ import {Redirect, Route, Switch} from "react-router"
 import {HashRouter, BrowserRouter} from "react-router-dom"
 
 const Main: React.FC<{}> = () => {
+    // router5.1中推荐使用<Route children>而不是<Route component>和<Route render>。
+    // 尽管它们在 5.1 中没有被弃用，但<Route component>和<Route render>API 有几个useParams在带有钩子的世界中不需要的怪癖（参见上面的讨论）。
+    // 我们很可能会在未来的版本中弃用这些 API。
+    // // before
+    // <Switch>
+    //   <Route path="/blog/:slug" component={BlogPost} />
+    //   <Route
+    //     path="/posts/:slug"
+    //     render={({ match }) => <BlogPost match={match} other="props" />}
+    //   />
+    // </Switch>
+    //
+    // // after
+    // <Switch>
+    //   <Route path="/blog/:slug">
+    //     <BlogPost />
+    //   </Route>
+    //   <Route path="/posts/:slug">
+    //     <BlogPost other="props" />
+    //   </Route>
+    // </Switch>
     return <Switch>
         {/*<Route path={'/login'} exact render={() => {*/}
             {/*return <LoginView/>*/}
         {/*}}/>*/}
-        <Route path={"/main"} render={()=>{ // replace 定位到一个页面后不能点击返回 goBack 不会往页面历史中增加
-            return (
-                // store 作为一个 prop 传给 Provider 组件，让其所有子组件都可以访问到store
-                // 原理是通过react context（上下文）实现的 本质上 Provider 就是给 connect 提供 store 用的
-                <Provider store={store}>
-                    <App/>
-                </Provider>
-            )
-        }}/>
+        {/*<Route path={"/main"} render={()=>{ // replace 定位到一个页面后不能点击返回 goBack 不会往页面历史中增加*/}
+            {/*return (*/}
+                {/*// store 作为一个 prop 传给 Provider 组件，让其所有子组件都可以访问到store*/}
+                {/*// 原理是通过react context（上下文）实现的 本质上 Provider 就是给 connect 提供 store 用的*/}
+                {/*<Provider store={store}>*/}
+                    {/*<App/>*/}
+                {/*</Provider>*/}
+            {/*)*/}
+        {/*}}/>*/}
+        {/*推荐使用<Route children>*/}
+        <Route path={"/main"}>
+            <Provider store={store}>
+                <App/>
+            </Provider>
+        </Route>
         <Route render={()=>{return <Redirect to={'/main'}/>}}/>
     </Switch>
 };
@@ -63,3 +90,20 @@ ReactDOM.render(
 // # .env.staging
 // NODE_ENV=production
 // VITE_APP_TITLE=My App (staging)
+
+
+// 构建发布包
+// 如果是发布到服务器根目录，那么无需配置，直接 yarn build 打包即可。
+// 如果是发布到服务器子目录，如：website，那么需要配置两个点：
+
+// vite.config.ts
+// export default defineConfig({
+//   // 配置公共路径，否则会出现资源找不到的问题
+//   base: "/website",
+// })
+
+// 路由配置
+// 配置路由根路径，否则路由跳转后浏览器上显示的地址不包含服务器子目录
+{/*<BrowserRouter basename="/website">*/}
+    {/*...*/}
+{/*</BrowserRouter>*/}

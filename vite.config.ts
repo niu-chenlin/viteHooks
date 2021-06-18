@@ -11,23 +11,45 @@ export default defineConfig({
     // a: "bb"
   },
   plugins: [reactRefresh()], // 将要用到的插件数组
-  publicDir: "./src/public/static", // 作为静态资源服务的文件夹。这个目录中的文件会再开发中被服务于 /，在构建时，会被拷贝到 outDir 根目录，并没有转换，永远只是复制到这里。该值可以是文件系统的绝对路径，也可以是相对于项目根的路径。
-  // alias: {
-  //   '/@/': resolve(__dirname, 'src') // 这样在模块中导入时@就指向src目录
-  // },
+  // publicDir: "./src/public/static", // 作为静态资源服务的文件夹。这个目录中的文件会再开发中被服务于 /，在构建时，会被拷贝到 outDir 根目录，并没有转换，永远只是复制到这里。该值可以是文件系统的绝对路径，也可以是相对于项目根的路径。
+  alias: {
+    '@styles': resolve(__dirname, './src/public/static') // 这样在模块中导入时@就指向src目录
+  },
   resolve: {
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json'], // 导入时想要省略的扩展名列表。
   },
-  // css: {
-  //   modules: {}, // 配置 CSS modules 的行为。选项将被传递给 postcss-modules。
-  //   // 注意，如果提供了该内联配置，Vite 将不会搜索其他 PostCSS 配置源。
-  //   postcss: {}, // 内联的 PostCSS 配置（格式同 postcss.config.js），或者一个（默认基于项目根目录的）自定义的 PostCSS 配置路径。其路径搜索是通过 postcss-load-config 实现的。
-  //   preprocessorOptions: { // 指定传递给 CSS 预处理器的选项。
-  //     scss: {
-  //       additionalData: `$injectedColor: orange;`
-  //     }
-  //   },
-  // },
+  css: {
+    // 使用 CSS Module
+    // 修改 CSS 文件名为 CSS Module 格式即可，无需配置，Vite 默认支持。
+    // index.css --> index.module.css
+    // index.scss --> index.module.scss
+    // index.less --> index.module.less
+
+    // modules: {}, // 配置 CSS modules 的行为。选项将被传递给 postcss-modules。
+    // // 注意，如果提供了该内联配置，Vite 将不会搜索其他 PostCSS 配置源。
+    postcss: {
+      plugins: [ // 自动添加css前缀 可以在vite.config.js文件中配置 或 新建 postcss.config.js配置文件
+        require('autoprefixer')
+      ]
+    }, // 内联的 PostCSS 配置（格式同 postcss.config.js），或者一个（默认基于项目根目录的）自定义的 PostCSS 配置路径。其路径搜索是通过 postcss-load-config 实现的。
+    preprocessorOptions: { // 指定传递给 CSS 预处理器的选项。
+      // scss: {
+      //   additionalData: `$injectedColor: orange;`
+      // }
+      // less: {
+      //   additionalData: "@import './src/public/static/style.less'"
+      // }
+      less: {
+        // 支持内联 JavaScript
+        javascriptEnabled: true, // 注意：若想在.js 等文件中import .css等文件，需要开启javascriptEnabled
+        additionalData: "@import '@styles/style.less';", //引入全局样式 注意：必须要有分号
+        // 重写 less 变量，定制样式
+        modifyVars: {
+          // '@primary-color': 'red',
+        },
+      }
+    },
+  },
   json: {
     namedExports: false, // 是否支持从 .json 文件中进行按名导入。
     stringify: false, // 设置为 true，导入的 JSON 会被转换为 export default JSON.parse("...") 会比转译成对象字面量性能更好，尤其是当 JSON 文件较大的时候。
@@ -83,7 +105,7 @@ export default defineConfig({
     // 转换过程将会由 esbuild 执行，并且此值应该是一个合法的 esbuild 目标选项。自定义目标也可以是一个 ES 版本（例如：es2015）、一个浏览器版本（例如：chrome58）或是多个目标组成的一个数组。
     target: "", // 设置最终构建的浏览器兼容目标。 -- 注意，如果代码包含不能被 esbuild 安全地编译的特性，那么构建将会失败。
     outDir: "dist", // 指定输出路径（相对于 项目根目录).
-    assetsDir: "static", // 指定生成静态资源的存放路径（相对于 build.outDir）。
+    // assetsDir: "static", // 指定生成静态资源的存放路径（相对于 build.outDir）。
     assetsInlineLimit: 0, // 小于此阈值的导入或引用资源将内联为 base64 编码，以避免额外的 http 请求。设置为 0 可以完全禁用此项。
     // 如果禁用，整个项目中的所有 CSS 将被提取到一个 CSS 文件中。
     cssCodeSplit: true, // 启用/禁用 CSS 代码拆分。当启用时，在异步 chunk 中导入的 CSS 将内联到异步 chunk 本身，并在块加载时插入。
