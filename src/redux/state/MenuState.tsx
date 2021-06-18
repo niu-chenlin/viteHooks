@@ -1,5 +1,5 @@
 import * as React from "react";
-import {DashboardView} from "../../views/dashboard-view/index";
+import {DashboardView} from "../../views/dashboard-view/dashboard-view";
 import {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
@@ -10,6 +10,7 @@ import {
     UserOutlined,
     ApartmentOutlined
 } from '@ant-design/icons';
+import {GeneralView, GeneralViewByHoc} from "../../views/general-view/general-view";
 
 const MenuState = [
     {
@@ -33,7 +34,7 @@ const MenuState = [
         key: "general",
         icon: <ApartmentOutlined />,
         role: 0,
-        component: <DashboardView/>,
+        component: <GeneralViewByHoc/>,
     }
 ];
 export default MenuState;

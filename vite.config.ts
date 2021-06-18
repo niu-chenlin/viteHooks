@@ -42,7 +42,8 @@ export default defineConfig({
       less: {
         // 支持内联 JavaScript
         javascriptEnabled: true, // 注意：若想在.js 等文件中import .css等文件，需要开启javascriptEnabled
-        additionalData: "@import '@styles/style.less';", //引入全局样式 注意：必须要有分号
+        // 全局样式默认导入不怎么修改的样式 - vite的热更新不会重新执行vite.config文件，因此频繁修改的样式不建议采用此方法
+        // additionalData: "@import '@styles/style.less';", //引入全局样式 注意：必须要有分号
         // 重写 less 变量，定制样式
         modifyVars: {
           // '@primary-color': 'red',

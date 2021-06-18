@@ -1,7 +1,7 @@
 import * as React from "react"
 import {useSelector, useDispatch, useStore} from 'react-redux'
 import { Table, Input, Button, Space } from 'antd'
-import {add, reduce} from "../../redux/actions/index"
+import {add, changeViewLoadingStatusAction, reduce} from "../../redux/actions/index"
 import {combineReducers} from "redux";
 import {useCallback, useState} from "react"
 
@@ -25,13 +25,16 @@ export const StudyView: React.FC<{}> = () => {
     // 遗憾的是，如果我们想要在事件处理函数里面dispatch actions，必须创建一个匿名函数，如：() => dispatch(actionCreator)。
     // 注意：由于匿名函数的性质，这将在每次重新渲染时获得新的引用。因此，如果将这个匿名函数作为props传递给子组件组件，那么子组件将每次都重新渲染。
     // 为了优化性能，必须使该函数具有相同的引用，解决方案是在useCallback中创建这个匿名函数。
-    const handleDispatchAdd = useCallback(() => dispatch(add(count)), [dispatch]); // 只有在dispatch改变时才
-    const handleDispatchReduce = useCallback(() => dispatch(reduce(count)), [dispatch]);
+    const handleDispatchAdd = useCallback(() => dispatch(add(count)), [count]); // 只有在dispatch改变时才
+    const handleDispatchReduce = useCallback(() => dispatch(reduce(count)), [count]);
 
+    // @ts-ignore
+    const handleDispatchRender = useCallback(() => dispatch(changeViewLoadingStatusAction(true)));
     // useStore用于获取创建的store实例。在任何需要访问store的应用中，都可以通过usestore来获取。
     // const store = useStore();
     return <div>
         <span>{count}</span>
+        <Button type="primary" onClick={handleDispatchRender}>点击</Button>
         <Button type="primary" onClick={handleDispatchAdd}>点击加一</Button>
         <Button type="primary" onClick={handleDispatchReduce}>点击减一</Button>
     </div>

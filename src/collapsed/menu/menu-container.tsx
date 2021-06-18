@@ -5,11 +5,17 @@ import {GLOBAL_ROLE} from "../../util/global-bariable/GlobalBariable";
 import {Menu} from "antd";
 const { SubMenu } = Menu;
 
+let testSet = new Set();
 // 容器组件 - 菜单
 const MenuContainer: React.FC<{menuList: any, testProps: string}> = (props: any) => {
+    testSet.add(props);
+    let testUseCallback = useCallback(() => {
+
+    }, [props]);
     console.log(props);
+    console.log(testSet.size); // 每次的props不同，导致重复渲染
     //@ts-ignore
-    let { sulg } = useParams();
+    let { slug } = useParams();
     let location = useLocation();
     let history = useHistory();
     let match = useRouteMatch({ // 将任何“浮动”（不在 a 内<Switch>）<Route>元素替换为useRouteMatch
@@ -18,34 +24,19 @@ const MenuContainer: React.FC<{menuList: any, testProps: string}> = (props: any)
         sensitive: true
     });
     // {match ? <BlogPost match={match} /> : <NotFound />}
-    console.log(sulg);
+    console.log(slug);
     console.log(location);
     console.log(history);
     console.log(match);
     // 根据role取出对应的菜单
     const menuListByRole = useMemo(() => { // useMemo返回缓存（memoized）的变量，useCallback返回缓存（memoized）的函数。
         return props.menuList.filter((menu: any) => (menu.role === GLOBAL_ROLE));
-    }, [props]);
+    }, [props.testProps]);
     console.log(menuListByRole);
 
-    let renderMenu = useCallback((menuArr) => { // 递归中的useCallback肯定会重复调用
-        console.log("useCallback");
-        return menuArr.map((menu: any) => {
-            if(menu.children) {
-                return <SubMenu key={menu.key} icon={menu.icon} title={menu.name}>
-                    {renderMenu(menu.children)}
-                </SubMenu>
-            } else {
-                return <Menu.Item key={menu.key} icon={menu.icon}>
-                    {menu.name}
-                </Menu.Item>
-            }
-        });
-    }, [menuListByRole]);
-
-    // let renderMenu = (menuArr: any[]) => {
-    //     console.log("renderMenu");
-    //     return menuArr.map(menu => {
+    // let renderMenu = useCallback((menuArr) => { // 递归中的useCallback肯定会重复调用
+    //     console.log("useCallback");
+    //     return menuArr.map((menu: any) => {
     //         if(menu.children) {
     //             return <SubMenu key={menu.key} icon={menu.icon} title={menu.name}>
     //                 {renderMenu(menu.children)}
@@ -56,7 +47,22 @@ const MenuContainer: React.FC<{menuList: any, testProps: string}> = (props: any)
     //             </Menu.Item>
     //         }
     //     });
-    // };
+    // }, [menuListByRole]);
+
+    let renderMenu = (menuArr: any[]) => {
+        console.log("renderMenu");
+        return menuArr.map(menu => {
+            if(menu.children) {
+                return <SubMenu key={menu.key} icon={menu.icon} title={menu.name}>
+                    {/*{renderMenu(menu.children)}*/}
+                </SubMenu>
+            } else {
+                return <Menu.Item key={menu.key} icon={menu.icon}>
+                    {menu.name}
+                </Menu.Item>
+            }
+        });
+    };
     // console.log(renderMenu(menuListByRole));
     const [menuState, setMenuState] = useState(renderMenu(menuListByRole));
     console.log(menuState);
@@ -65,7 +71,7 @@ const MenuContainer: React.FC<{menuList: any, testProps: string}> = (props: any)
         console.log(e);
         history.push('/main/' + e.key);
     };
-    return <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" onClick={menuOnClick}>
+    return <Menu theme="dark" defaultSelectedKeys={['dashboard']} mode="inline" onClick={menuOnClick}>
         {menuState}
     </Menu>
 };

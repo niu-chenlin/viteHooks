@@ -4,12 +4,10 @@ import {VIEW_LOADING} from "./ActionTypes";
  * redux loading的action生成器
  * @param value
  */
-export const showViewLoadingStatusAction = (value: boolean) => {
+export const changeViewLoadingStatusAction = (value: boolean) => {
     return {
         type: VIEW_LOADING,
-        payload: {
-            loading: value
-        }
+        loading: value
     }
 };
 
