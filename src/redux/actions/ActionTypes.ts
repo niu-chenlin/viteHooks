@@ -1,0 +1,3 @@
+
+export const VIEW_LOADING = "VIEW_LOADING";
+export const MENU_ACTION_TYPE = "MENU_ACTION_TYPE";
