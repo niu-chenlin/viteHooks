@@ -7,6 +7,8 @@ export const DashboardView: React.FC<{}> = () => {
   staticChangeLoading();
   return <div className="dashboard-view">
     <p>this is dashboard-view</p>
+    <div>
 
+    </div>
   </div>
 };

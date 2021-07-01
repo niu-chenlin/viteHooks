@@ -1,7 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {Provider} from 'react-redux'
-import './index.css'
+// import './index.css'
+// import 'antd/dist/antd.less'
+import './public/static/style.less'
 import App from './App'
 import store from "./redux/store"
 import {Redirect, Route, Switch} from "react-router"
@@ -107,3 +109,12 @@ ReactDOM.render(
 {/*<BrowserRouter basename="/website">*/}
     {/*...*/}
 {/*</BrowserRouter>*/}
+
+// 使用 NPM:
+//
+// npm init @vitejs/app
+// # npm 6.x
+// npm init @vitejs/app my-vue-app --template vue
+//
+// # npm 7+, 需要额外的双横线：
+// npm init @vitejs/app my-vue-app -- --template vue

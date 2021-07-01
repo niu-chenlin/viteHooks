@@ -10,7 +10,8 @@ import {
     UserOutlined,
     ApartmentOutlined
 } from '@ant-design/icons';
-import {GeneralView, GeneralViewByHoc} from "../../views/general-view/general-view";
+import {GeneralView} from "../../views/general-view/general-view";
+import {HooksView} from "../../views/hooks-view/hooks-view";
 
 const MenuState = [
     {
@@ -34,7 +35,14 @@ const MenuState = [
         key: "general",
         icon: <ApartmentOutlined />,
         role: 0,
-        component: <GeneralViewByHoc/>,
+        component: <GeneralView/>,
+    },
+    {
+        name: "Hooks使用",
+        key: "hooks",
+        icon: <DesktopOutlined />,
+        role: 0,
+        component: <HooksView/>,
     }
 ];
 export default MenuState;
